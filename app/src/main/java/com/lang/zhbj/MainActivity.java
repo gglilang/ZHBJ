@@ -1,38 +1,45 @@
 package com.lang.zhbj;
 
-import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
-import android.view.Menu;
-import android.view.MenuItem;
+import android.support.v4.app.FragmentManager;
+import android.support.v4.app.FragmentTransaction;
+
+import com.jeremyfeinstein.slidingmenu.lib.SlidingMenu;
+import com.jeremyfeinstein.slidingmenu.lib.app.SlidingFragmentActivity;
+import com.lang.zhbj.fragment.ContentFragment;
+import com.lang.zhbj.fragment.LeftMenuFragment;
 
 
-public class MainActivity extends ActionBarActivity {
+public class MainActivity extends SlidingFragmentActivity {
+
+    private String FRAGMENT_LEFT_MENU = "fragment_left_menu";
+    private String FRAGMENT_CONTENT = "fragment_content";
 
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
+    public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
+        setBehindContentView(R.layout.left_menu);   // 设置侧边栏布局
+
+        SlidingMenu slidingMenu = getSlidingMenu(); // 获取侧边栏对象
+        slidingMenu.setTouchModeAbove(SlidingMenu.TOUCHMODE_FULLSCREEN);    // 设置全屏触摸
+
+        slidingMenu.setBehindOffset(300);   // 设置预留屏幕的宽度
+
+        initFragment();
     }
 
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        // Inflate the menu; this adds items to the action bar if it is present.
-        getMenuInflater().inflate(R.menu.menu_main, menu);
-        return true;
+    /**
+     * 初始化fragment，将fragment数据填充给布局文件
+     */
+    private void initFragment(){
+        FragmentManager fm = getSupportFragmentManager();
+        FragmentTransaction transaction = fm.beginTransaction();    // 开启事务
+        // 用fragment代替FrameLayout
+        transaction.replace(R.id.fl_left_menu, new LeftMenuFragment(), FRAGMENT_LEFT_MENU);
+        transaction.replace(R.id.fl_content, new ContentFragment(), FRAGMENT_CONTENT);
+        transaction.commit();   // 提交事务
     }
 
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        // Handle action bar item clicks here. The action bar will
-        // automatically handle clicks on the Home/Up button, so long
-        // as you specify a parent activity in AndroidManifest.xml.
-        int id = item.getItemId();
-
-        //noinspection SimplifiableIfStatement
-        if (id == R.id.action_settings) {
-            return true;
-        }
-
-        return super.onOptionsItemSelected(item);
-    }
 }
