@@ -4,16 +4,15 @@ import android.support.v4.view.PagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.RadioButton;
 import android.widget.RadioGroup;
 
 import com.lang.zhbj.R;
-import com.lang.zhbj.fragment.base.BasePager;
-import com.lang.zhbj.fragment.base.impl.GovAffairsPager;
-import com.lang.zhbj.fragment.base.impl.HomePager;
-import com.lang.zhbj.fragment.base.impl.NewsCenterPager;
-import com.lang.zhbj.fragment.base.impl.SettingPager;
-import com.lang.zhbj.fragment.base.impl.SmartServicePager;
+import com.lang.zhbj.base.BasePager;
+import com.lang.zhbj.base.impl.GovAffairsPager;
+import com.lang.zhbj.base.impl.HomePager;
+import com.lang.zhbj.base.impl.NewsCenterPager;
+import com.lang.zhbj.base.impl.SettingPager;
+import com.lang.zhbj.base.impl.SmartServicePager;
 import com.lidroid.xutils.ViewUtils;
 import com.lidroid.xutils.view.annotation.ViewInject;
 
@@ -55,6 +54,48 @@ public class ContentFragment extends BaseFragment {
         mPagerList.add(new SettingPager(mActivity));
 
         vp_content.setAdapter(new ContentAdapter());
+
+        rg_group.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(RadioGroup group, int checkedId) {
+                switch (checkedId) {
+                    case R.id.rb_home:
+                        vp_content.setCurrentItem(0, false);    // 禁止滑动动画
+                        break;
+                    case R.id.rb_newscenter:
+                        vp_content.setCurrentItem(1, false);    // 禁止滑动动画
+                        break;
+                    case R.id.rb_smartservice:
+                        vp_content.setCurrentItem(2, false);    // 禁止滑动动画
+                        break;
+                    case R.id.rb_govaffairs:
+                        vp_content.setCurrentItem(3, false);    // 禁止滑动动画
+                        break;
+                    case R.id.rb_setting:
+                        vp_content.setCurrentItem(4, false);    // 禁止滑动动画
+                        break;
+                }
+            }
+        });
+
+        vp_content.setOnPageChangeListener(new ViewPager.OnPageChangeListener() {
+            @Override
+            public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
+
+            }
+
+            // 页面被选中
+            @Override
+            public void onPageSelected(int position) {
+                mPagerList.get(position).initData();
+            }
+
+            @Override
+            public void onPageScrollStateChanged(int state) {
+
+            }
+        });
+        mPagerList.get(0).initData();
     }
 
     class ContentAdapter extends PagerAdapter{
@@ -72,7 +113,7 @@ public class ContentFragment extends BaseFragment {
         @Override
         public Object instantiateItem(ViewGroup container, int position) {
             container.addView(mPagerList.get(position).mRootView);
-            mPagerList.get(position).initData();
+//            mPagerList.get(position).initData();  // 不能在这里初始化，viewPager会预加载数据
             return mPagerList.get(position).mRootView;
         }
 
@@ -80,5 +121,9 @@ public class ContentFragment extends BaseFragment {
         public void destroyItem(ViewGroup container, int position, Object object) {
             container.removeView((View) object);
         }
+    }
+
+    public NewsCenterPager getNewsCenterPager(){
+        return (NewsCenterPager) mPagerList.get(1);
     }
 }

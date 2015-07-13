@@ -1,6 +1,7 @@
 package com.lang.zhbj;
 
 import android.os.Bundle;
+import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 
@@ -40,6 +41,26 @@ public class MainActivity extends SlidingFragmentActivity {
         transaction.replace(R.id.fl_left_menu, new LeftMenuFragment(), FRAGMENT_LEFT_MENU);
         transaction.replace(R.id.fl_content, new ContentFragment(), FRAGMENT_CONTENT);
         transaction.commit();   // 提交事务
+    }
+
+    /**
+     * 获取侧边栏fragment
+     * @return
+     */
+    public LeftMenuFragment getLeftMenuFragment(){
+        FragmentManager fm = getSupportFragmentManager();
+        LeftMenuFragment fragment = (LeftMenuFragment) fm.findFragmentByTag(FRAGMENT_LEFT_MENU);
+        return fragment;
+    }
+
+    /**
+     * 获取主页面fragment
+     * @return
+     */
+    public ContentFragment getContentFragment(){
+        FragmentManager fm = getSupportFragmentManager();
+        ContentFragment fragment = (ContentFragment) fm.findFragmentByTag(FRAGMENT_CONTENT);
+        return fragment;
     }
 
 }
