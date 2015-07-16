@@ -1,2 +1,2 @@
 include ':app'
-include ':librarySlidingMenu'
+include ':librarySlidingMenu',':libraryViewPagerIndicator'
