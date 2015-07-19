@@ -2,7 +2,9 @@ package com.lang.zhbj.base.impl;
 
 import android.app.Activity;
 import android.graphics.Color;
+import android.text.TextUtils;
 import android.view.Gravity;
+import android.view.View;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -17,6 +19,7 @@ import com.lang.zhbj.base.menudetail.TopicMenuDetailPager;
 import com.lang.zhbj.domain.NewsData;
 import com.lang.zhbj.fragment.LeftMenuFragment;
 import com.lang.zhbj.global.GlobalContacts;
+import com.lang.zhbj.utils.CacheUtils;
 import com.lidroid.xutils.HttpUtils;
 import com.lidroid.xutils.exception.HttpException;
 import com.lidroid.xutils.http.ResponseInfo;
@@ -42,6 +45,13 @@ public class NewsCenterPager extends BasePager {
     public void initData() {
         super.initData();
         setSlidingMenuEnable(true);
+
+        String cache = CacheUtils.getCache(mActivity, GlobalContacts.CATEGORIES_URL);
+        // 如果缓存存在，直接解析数据
+        if(!TextUtils.isEmpty(cache)){
+            parseData(cache);
+        }
+        // 不管有没有缓存，都获取最新数据
         getDataFromServer();
 
     }
@@ -63,6 +73,7 @@ public class NewsCenterPager extends BasePager {
                 System.out.println("返回结果：" + result);
 
                 parseData(result);
+                CacheUtils.setCache(mActivity, GlobalContacts.CATEGORIES_URL, result);
             }
 
             // 访问失败
@@ -89,7 +100,7 @@ public class NewsCenterPager extends BasePager {
         mPager = new ArrayList<>();
         mPager.add(new NewsMenuDetailPager(mActivity, mNewsData.data.get(0).children));
         mPager.add(new TopicMenuDetailPager(mActivity));
-        mPager.add(new PhotoMenuDetailPager(mActivity));
+        mPager.add(new PhotoMenuDetailPager(mActivity, btn_photo));
         mPager.add(new InteractMenuDetailPager(mActivity));
 
         setCurrentMenuDetailPager(0);
@@ -109,5 +120,11 @@ public class NewsCenterPager extends BasePager {
         tv_title.setText(title);
 
         pager.initData();
+
+        if(pager instanceof PhotoMenuDetailPager){
+            btn_photo.setVisibility(View.VISIBLE);
+        } else {
+            btn_photo.setVisibility(View.INVISIBLE);
+        }
     }
 }

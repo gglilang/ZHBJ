@@ -16,6 +16,8 @@
             android:layout_height="match_parent"
             android:src="@mipmap/common_listview_headview_red_arrow"/>
         <ProgressBar
+            android:indeterminateDuration="2000"
+            android:indeterminateDrawable="@drawable/custom_progress"
             android:visibility="invisible"
             android:id="@+id/pb_progress"
             android:layout_gravity="center"
@@ -37,14 +39,14 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:textSize="20sp"
-            android:textColor="@android:color/black"
+            android:textColor="#ff0000"
             android:text="下拉刷新"/>
 
         <TextView
             android:id="@+id/tv_time"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="2015-07:16 13:55:55"
+            android:text="最后刷新时间：2015-07:16 13:55:55"
             android:textSize="16sp"/>
 
     </LinearLayout>
